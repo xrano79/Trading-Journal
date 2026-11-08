@@ -65,6 +65,8 @@
   .btn-sm{padding:5px 10px;font-size:11px;}
   .btn-icon{width:34px;height:34px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);border:1px solid var(--border);background:rgba(255,255,255,0.7);color:var(--fg2);cursor:pointer;transition:all 0.15s;flex-shrink:0;}
   .btn-icon:hover{background:#fff;color:var(--fg);border-color:var(--border2);}
+  .btn-xs{width:28px;height:28px;font-size:10px;margin-left:4px;}
+  .btn-xs.danger:hover{color:var(--loss);border-color:rgba(229,72,77,0.4);background:var(--loss-bg);}
 
   .main{max-width:1440px;margin:0 auto;padding:16px 12px 20px;}
 
@@ -152,6 +154,7 @@
   .form-label{font-size:10px;font-weight:700;color:var(--fg2);text-transform:uppercase;letter-spacing:0.05em;display:flex;justify-content:space-between;align-items:center;}
   .form-input,.form-select,.form-textarea{background:#fff;color:var(--fg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13.5px;font-family:'Space Grotesk',sans-serif;outline:none;transition:all 0.15s;width:100%;}
   .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,159,110,0.12);}
+  .form-input:disabled{background:var(--card2);color:var(--muted);cursor:not-allowed;}
   .form-textarea{resize:vertical;min-height:60px;}
   .form-select{appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238a97ac' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
   .combo-wrapper{display:flex;gap:6px;align-items:center;}
@@ -168,7 +171,7 @@
   .img-preview-item .img-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(28,39,54,0.72);border:none;color:#fff;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
   .img-preview-item .img-remove:hover{background:var(--loss);}
 
-  .td-thumb{display:flex;gap:4px;align-items:center;}
+  .td-thumb{display:flex;gap:4px;align-items:center;cursor:pointer;}
   .thumb-img{width:32px;height:32px;border-radius:6px;object-fit:cover;cursor:pointer;border:1px solid var(--border);transition:transform 0.15s;background:#dfe6ee;}
   .thumb-img:hover{transform:scale(1.15);box-shadow:0 4px 12px rgba(28,39,54,0.2);}
   .thumb-badge{background:var(--accent);color:#fff;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-left:-6px;border:2px solid var(--card);flex-shrink:0;}
@@ -245,7 +248,8 @@
   ::-webkit-scrollbar-thumb{background:#c9d4e2;border-radius:3px;}
 
   .lib-error{background:var(--loss-bg);border:1px solid rgba(229,72,77,0.4);color:var(--loss);padding:10px;border-radius:var(--radius-sm);margin:10px 0;font-size:12px;display:none;}
-  .sync-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;margin:6px 0;}
+  .sync-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;margin:6px 0;cursor:pointer;width:fit-content;}
+  .sync-status:hover{color:var(--fg);}
   .sync-status .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
   .sync-status .dot.green{background:var(--profit);}
   .sync-status .dot.red{background:var(--loss);}
@@ -283,15 +287,16 @@
       <button class="btn btn-ghost btn-sm" onclick="openDataModal()" title="Kelola List Simbol & Metode"><i class="fa-solid fa-database"></i> <span class="btn-label">Data</span></button>
       <button class="btn btn-ghost btn-sm" onclick="openExportModal()" title="Export"><i class="fa-solid fa-file-export"></i> <span class="btn-label">Export</span></button>
       <button class="btn btn-ghost btn-sm" onclick="openImportModal()" title="Import"><i class="fa-solid fa-file-import"></i> <span class="btn-label">Import</span></button>
-      <button class="btn btn-ghost btn-sm" onclick="syncToDrive(true)" title="Simpan ke Google Drive"><i class="fa-solid fa-cloud-arrow-up"></i> <span class="btn-label">Sync</span></button>
-      <button class="btn btn-ghost btn-sm" onclick="pullFromDrive(true)" title="Ambil dari Google Drive"><i class="fa-solid fa-cloud-arrow-down"></i> <span class="btn-label">Pull</span></button>
+      <button class="btn btn-ghost btn-sm" onclick="openSyncConfigModal()" title="Konfigurasi Google Drive"><i class="fa-brands fa-google-drive"></i> <span class="btn-label">Drive</span></button>
+      <button class="btn btn-ghost btn-sm" onclick="syncToDrive(true)" title="Push ke Google Drive"><i class="fa-solid fa-cloud-arrow-up"></i></button>
+      <button class="btn btn-ghost btn-sm" onclick="pullFromDrive(true)" title="Pull dari Google Drive"><i class="fa-solid fa-cloud-arrow-down"></i></button>
       <button class="btn btn-primary btn-sm" onclick="openModal()"><i class="fa-solid fa-plus"></i> <span class="btn-label">Tambah Trade</span></button>
     </div>
   </header>
 
   <main class="main">
     <div id="libError" class="lib-error"><i class="fa-solid fa-triangle-exclamation"></i> <span id="libErrorMsg">Gagal memuat library. Periksa koneksi internet atau coba refresh.</span></div>
-    <div id="syncStatusBar" class="sync-status"><span class="dot yellow"></span> <span id="syncStatusText">Memuat...</span></div>
+    <div id="syncStatusBar" class="sync-status" onclick="openSyncConfigModal()" title="Klik untuk mengatur Drive"><span class="dot yellow" id="syncDot"></span> <span id="syncStatusText">Memuat...</span></div>
     <div class="stats-grid" id="statsGrid"></div>
 
     <div class="sop-container">
@@ -376,6 +381,31 @@
       <div id="emptyState" class="empty-state" style="display:none;"><i class="fa-solid fa-inbox"></i><p>Belum ada data trading.<br>Klik "Tambah Trade" untuk memulai.</p></div>
     </div>
   </main>
+</div>
+
+<!-- Sync Config Modal -->
+<div class="modal-overlay" id="syncConfigModal">
+  <div class="modal" style="max-width:500px;">
+    <div class="modal-header">
+      <h2><i class="fa-brands fa-google-drive" style="color:var(--accent);"></i> Konfigurasi Google Drive</h2>
+      <button class="btn-icon" onclick="closeSyncConfigModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group full" style="margin-bottom:12px;">
+        <label class="form-label">Google Apps Script Web App URL</label>
+        <input type="text" id="cfgDriveUrl" class="form-input mono" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">User Key Unik</label>
+        <input type="text" id="cfgDriveKey" class="form-input mono" placeholder="Misal: nama_rahasia_2026">
+        <span style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.4;">Samakan key ini di semua perangkat. Kolom terkunci jika URL/Key sudah di-hardcode di script.</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeSyncConfigModal()">Batal</button>
+      <button class="btn btn-primary" onclick="saveSyncConfig()"><i class="fa-solid fa-floppy-disk"></i> Simpan &amp; Pull</button>
+    </div>
+  </div>
 </div>
 
 <!-- Balance Modal -->
@@ -538,12 +568,12 @@
 
 <script>
 // ==========================================
-// KONFIGURASI
+// KONFIGURASI PERMANEN GOOGLE DRIVE
 // ==========================================
-var CONFIG = {
-  DRIVE_SYNC_URL: 'https://script.google.com/macros/s/AKfycbw1dAGxv3Fi3Vxg1LvjPsLRNc8kOAqJ54IQxo3_j0skLoV5iRIriT35cUdJl7g4S8ta/exec',
-  USER_KEY: 'trading_journal_data_FinalJournal3'
-};
+// Isi URL (harus berakhiran /exec) dan Key. Pakai nilai yang SAMA di semua perangkat.
+// Kosongkan ('') jika ingin mengisi lewat menu "Drive" di dalam web.
+const HARDCODED_DRIVE_URL = 'https://script.google.com/macros/s/AKfycbz-v0avocjtH8_5qTj7rnCXiAZTnRao1IusGixU9bx3sAB-uJMZdfyLfMTN8nGxN8-X/exec';
+const HARDCODED_USER_KEY  = 'JurnalTerang1';
 
 function defaultRules(){
   return [
@@ -570,7 +600,9 @@ var appData = {
   methods: ['ICT Breakout', 'ICT Reversal', 'CrT'],
   rules: defaultRules(),
   sops: defaultSops(),
-  trades: []
+  trades: [],
+  config: { DRIVE_SYNC_URL: '', USER_KEY: '' },
+  updatedAt: 0
 };
 
 var editingId = null;
@@ -582,20 +614,9 @@ var distChartInstance = null;
 var lbImages = [];
 var lbIndex = 0;
 var syncInProgress = false;
+var driveReady = false;   // push otomatis baru boleh setelah pull awal selesai
+var pendingPush = false;
 var confirmCb = null;
-
-// ==========================================
-// USER KEY
-// ==========================================
-function getOrCreateUserKey() {
-  var key = localStorage.getItem('tj_user_key');
-  if (!key) {
-    key = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
-    localStorage.setItem('tj_user_key', key);
-  }
-  return key;
-}
-CONFIG.USER_KEY = getOrCreateUserKey();
 
 // ==========================================
 // HELPERS
@@ -672,15 +693,36 @@ function compressImage(file, maxDim, quality){
 }
 
 function normalizeData(){
+  appData.config = appData.config || { DRIVE_SYNC_URL:'', USER_KEY:'' };
+  appData.updatedAt = appData.updatedAt || 0;
   appData.methods = appData.methods || ['ICT Breakout','ICT Reversal','CrT'];
   appData.symbols = appData.symbols || ['EURUSD','GBPUSD','XAUUSD','US30'];
   if(!appData.initialBalance) appData.initialBalance = 10000;
-  appData.rules = (appData.rules || defaultRules()).map(function(r){ var c={...r}; if(!Array.isArray(c.images)) c.images=[]; return c; });
-  appData.sops  = (appData.sops  || defaultSops()).map(function(s){ var c={...s}; if(!Array.isArray(c.images)) c.images=[]; return c; });
-  appData.trades = (appData.trades || []).map(function(t){ var c={...t}; if(!Array.isArray(c.images)) c.images=[]; return c; });
+  function fix(arr){
+    return arr.map(function(x){
+      var c = Object.assign({}, x);
+      c.id = String(c.id);
+      if(!Array.isArray(c.images)) c.images = [];
+      return c;
+    });
+  }
+  appData.rules  = fix(appData.rules  || defaultRules());
+  appData.sops   = fix(appData.sops   || defaultSops());
+  appData.trades = fix(appData.trades || []);
 }
 
-async function loadLocalData() {
+// ==========================================
+// PENYIMPANAN LOKAL + GOOGLE DRIVE
+// ==========================================
+function getDriveCfg(){
+  var c = appData.config || {};
+  return {
+    url: HARDCODED_DRIVE_URL || c.DRIVE_SYNC_URL || '',
+    key: HARDCODED_USER_KEY  || c.USER_KEY || ''
+  };
+}
+
+async function loadLocalData(){
   try {
     var localSaved = null;
     if (typeof localforage !== 'undefined') {
@@ -690,95 +732,136 @@ async function loadLocalData() {
       var fb = localStorage.getItem('tj_data_v3');
       if (fb) { try { localSaved = JSON.parse(fb); } catch(e){} }
     }
-    if (localSaved) {
-      appData = { ...appData, ...localSaved };
-      normalizeData();
-    }
+    if (localSaved) appData = Object.assign({}, appData, localSaved);
   } catch (e) {
     console.error('Load data error:', e);
   }
+  normalizeData();
 }
 
-async function saveData() {
+async function saveLocal(){
   try {
-    if (typeof localforage !== 'undefined') {
-      await localforage.setItem('tj_data_v3', appData);
-    }
+    if (typeof localforage !== 'undefined') await localforage.setItem('tj_data_v3', appData);
     try { localStorage.setItem('tj_data_v3', JSON.stringify(appData)); } catch(e){}
-    syncToDrive(false);
   } catch (e) {
-    console.error('Save data error:', e);
+    console.error('Save local error:', e);
+    showToast('Gagal menyimpan data lokal', 'error');
   }
 }
 
-// ==========================================
-// SYNC GOOGLE DRIVE
-// ==========================================
-async function syncToDrive(showToastMsg) {
-  if (syncInProgress) return;
+async function saveData(){
+  appData.updatedAt = Date.now();
+  await saveLocal();
+  if (driveReady) syncToDrive(false);
+}
+
+async function syncToDrive(isManual){
+  var c = getDriveCfg();
+  if (!c.url || !c.key) { if (isManual) openSyncConfigModal(); return; }
+  if (syncInProgress) { pendingPush = true; return; }
   syncInProgress = true;
-  updateSyncStatus('yellow', 'Menyimpan ke Drive...');
+  updateSyncStatus('yellow', 'Drive: mengunggah...');
+  if (isManual) showToast('Mengunggah data ke Google Drive...', 'info');
   try {
-    await fetch(CONFIG.DRIVE_SYNC_URL, {
+    var copy = Object.assign({}, appData);
+    delete copy.config;
+    var res = await fetch(c.url, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userKey: CONFIG.USER_KEY, content: appData })
+      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ userKey: c.key, content: copy })
     });
-    if (showToastMsg) showToast('Data berhasil disimpan ke Google Drive!', 'success');
-    updateSyncStatus('green', 'Tersinkronisasi ' + new Date().toLocaleTimeString());
-    localStorage.setItem('tj_last_sync', Date.now().toString());
+    var result = await res.json();
+    if (!result.success) throw new Error(result.error || 'Server menolak data');
+    driveReady = true;
+    updateSyncStatus('green', 'Drive: tersimpan ' + new Date().toLocaleTimeString());
+    if (isManual) showToast('Data tersimpan ke Google Drive!', 'success');
   } catch (err) {
     console.error('Sync error:', err);
-    if (showToastMsg) showToast('Gagal sinkronisasi ke Drive', 'error');
-    updateSyncStatus('red', 'Gagal sync');
+    updateSyncStatus('red', 'Drive: gagal upload');
+    if (isManual) showToast('Gagal upload ke Drive', 'error');
   }
   syncInProgress = false;
+  if (pendingPush) { pendingPush = false; syncToDrive(false); }
 }
 
-async function pullFromDrive(showToastMsg) {
+async function pullFromDrive(isManual){
+  var c = getDriveCfg();
+  if (!c.url || !c.key) { if (isManual) openSyncConfigModal(); return; }
   if (syncInProgress) return;
   syncInProgress = true;
-  updateSyncStatus('yellow', 'Mengambil dari Drive...');
-  var timer = null;
+  updateSyncStatus('yellow', 'Drive: menarik data...');
+  if (isManual) showToast('Menarik data dari Google Drive...', 'info');
+  var timer = null, pushAfter = false;
   try {
-    var url = CONFIG.DRIVE_SYNC_URL + '?userKey=' + encodeURIComponent(CONFIG.USER_KEY);
-    var opts = {};
-    if (typeof AbortController !== 'undefined') {
-      var controller = new AbortController();
-      opts.signal = controller.signal;
-      timer = setTimeout(function(){ controller.abort(); }, 15000);
-    }
-    var response = await fetch(url, opts);
-    if (timer) clearTimeout(timer);
-    if (!response.ok) throw new Error('HTTP ' + response.status);
-    var result = await response.json();
-    if (result.success && result.data) {
-      appData = { ...appData, ...result.data };
-      normalizeData();
-      renderAll();
-      if (showToastMsg) showToast('Data dari Drive berhasil dimuat!', 'success');
-      updateSyncStatus('green', 'Tersinkronisasi ' + new Date().toLocaleTimeString());
-      localStorage.setItem('tj_last_sync', Date.now().toString());
+    var controller = new AbortController();
+    timer = setTimeout(function(){ controller.abort(); }, 30000);
+    var res = await fetch(c.url + '?userKey=' + encodeURIComponent(c.key), {
+      method: 'GET', redirect: 'follow', signal: controller.signal
+    });
+    clearTimeout(timer);
+    var result = await res.json();
+    if (!result.success) throw new Error(result.error || 'Gagal membaca Drive');
+
+    if (result.data) {
+      var remoteTs = result.data.updatedAt || 0;
+      var localTs = appData.updatedAt || 0;
+      if (!isManual && localTs > remoteTs) {
+        pushAfter = true; // data lokal lebih baru, jangan ditimpa
+      } else {
+        var cfg = appData.config;
+        appData = Object.assign({}, appData, result.data);
+        appData.config = cfg;
+        normalizeData();
+        await saveLocal();
+        renderAll();
+        if (isManual) showToast('Data dari Drive berhasil dimuat!', 'success');
+      }
     } else {
-      throw new Error('Data tidak ditemukan di Drive');
+      pushAfter = true; // Drive masih kosong, unggah data lokal
+      if (isManual) showToast('Belum ada file di Drive, mengunggah data lokal...', 'info');
     }
+    driveReady = true;
+    updateSyncStatus('green', 'Drive: terhubung (' + c.key + ')');
   } catch (err) {
     if (timer) clearTimeout(timer);
     console.error('Pull error:', err);
-    if (showToastMsg) showToast('Gagal mengambil data dari Drive', 'error');
-    updateSyncStatus('red', 'Gagal pull');
+    updateSyncStatus('red', 'Drive: gagal / offline');
+    if (isManual) showToast('Gagal terhubung ke Google Drive', 'error');
   }
   syncInProgress = false;
+  if (pushAfter) syncToDrive(false);
 }
 
-function updateSyncStatus(color, text) {
-  var bar = document.getElementById('syncStatusBar');
-  if (!bar) return;
-  var dot = bar.querySelector('.dot');
+function updateSyncStatus(color, text){
+  var dot = document.getElementById('syncDot');
   var label = document.getElementById('syncStatusText');
   if (dot) dot.className = 'dot ' + color;
   if (label) label.textContent = text;
+}
+
+// ==========================================
+// MODAL KONFIGURASI DRIVE
+// ==========================================
+function openSyncConfigModal(){
+  var c = getDriveCfg();
+  var u = document.getElementById('cfgDriveUrl');
+  var k = document.getElementById('cfgDriveKey');
+  u.value = c.url; k.value = c.key;
+  u.disabled = !!HARDCODED_DRIVE_URL;
+  k.disabled = !!HARDCODED_USER_KEY;
+  document.getElementById('syncConfigModal').classList.add('open');
+}
+function closeSyncConfigModal(){ document.getElementById('syncConfigModal').classList.remove('open'); }
+async function saveSyncConfig(){
+  var url = HARDCODED_DRIVE_URL || document.getElementById('cfgDriveUrl').value.trim();
+  var key = HARDCODED_USER_KEY  || document.getElementById('cfgDriveKey').value.trim();
+  if (!url || !key) { showToast('URL dan Key tidak boleh kosong', 'error'); return; }
+  appData.config.DRIVE_SYNC_URL = url;
+  appData.config.USER_KEY = key;
+  await saveLocal();
+  closeSyncConfigModal();
+  pullFromDrive(true);
 }
 
 // ==========================================
@@ -846,7 +929,7 @@ function renderStats(){
 }
 
 // ==========================================
-// CHARTS & NUMERIC DETAILS
+// CHARTS
 // ==========================================
 var crosshairPlugin = {
   id:'crosshair',
@@ -1092,11 +1175,11 @@ function renderSymbols(){
     html = '<div class="empty-mini">Belum ada data simbol.</div>';
   } else {
     for(var j=0;j<entries.length;j++){
-      var s=entries[j][0], d=entries[j][1];
+      var s2=entries[j][0], d=entries[j][1];
       var decided = d.wins+d.losses;
       var wr = decided ? Math.round(d.wins/decided*100) : 0;
       html += '<div class="symbol-row">'+
-        '<span class="symbol-name mono">'+escapeHtml(s)+'</span>'+
+        '<span class="symbol-name mono">'+escapeHtml(s2)+'</span>'+
         '<div class="symbol-bar-bg"><div class="symbol-bar" style="width:'+wr+'%;background:'+(d.pl>=0?'var(--profit)':'var(--loss)')+';"></div></div>'+
         '<span class="mono ta-r">'+d.count+'</span>'+
         '<span class="mono ta-r" style="color:'+(wr>=50?'var(--profit)':'var(--warn)')+';">'+wr+'%</span>'+
@@ -1285,23 +1368,25 @@ function addSop(){
 function populateSelects(){
   var symSel = document.getElementById('fSymbolSelect');
   var filtSym = document.getElementById('filterSymbol');
+  var prevSym = filtSym ? filtSym.value : 'all';
   var syms = appData.symbols || [];
   var sHtml = '';
-  for(var i=0;i<syms.length;i++) sHtml += '<option value="'+syms[i]+'">'+syms[i]+'</option>';
+  for(var i=0;i<syms.length;i++) sHtml += '<option value="'+escapeHtml(syms[i])+'">'+escapeHtml(syms[i])+'</option>';
   if(symSel) symSel.innerHTML = sHtml;
   var fsHtml = '<option value="all">Semua Pair</option>';
-  for(var j=0;j<syms.length;j++) fsHtml += '<option value="'+syms[j]+'">'+syms[j]+'</option>';
-  if(filtSym) filtSym.innerHTML = fsHtml;
+  for(var j=0;j<syms.length;j++) fsHtml += '<option value="'+escapeHtml(syms[j])+'">'+escapeHtml(syms[j])+'</option>';
+  if(filtSym){ filtSym.innerHTML = fsHtml; if(syms.indexOf(prevSym)>=0) filtSym.value = prevSym; }
 
   var metSel = document.getElementById('fMethodSelect');
   var filtMet = document.getElementById('filterMethod');
+  var prevMet = filtMet ? filtMet.value : 'all';
   var mets = appData.methods || [];
   var mHtml = '';
-  for(var k=0;k<mets.length;k++) mHtml += '<option value="'+mets[k]+'">'+mets[k]+'</option>';
+  for(var k=0;k<mets.length;k++) mHtml += '<option value="'+escapeHtml(mets[k])+'">'+escapeHtml(mets[k])+'</option>';
   if(metSel) metSel.innerHTML = mHtml;
   var fmHtml = '<option value="all">Semua Metode</option>';
-  for(var l=0;l<mets.length;l++) fmHtml += '<option value="'+mets[l]+'">'+mets[l]+'</option>';
-  if(filtMet) filtMet.innerHTML = fmHtml;
+  for(var l=0;l<mets.length;l++) fmHtml += '<option value="'+escapeHtml(mets[l])+'">'+escapeHtml(mets[l])+'</option>';
+  if(filtMet){ filtMet.innerHTML = fmHtml; if(mets.indexOf(prevMet)>=0) filtMet.value = prevMet; }
 }
 
 function renderTable(){
@@ -1326,7 +1411,7 @@ function renderTable(){
     }
     if(fImg === 'with' && (!t.images || !t.images.length)) return false;
     if(fImg === 'without' && t.images && t.images.length > 0) return false;
-    if(fMonth && !(t.date||'').indexOf(fMonth)===0) return false;
+    if(fMonth && (t.date||'').indexOf(fMonth)!==0) return false;
     return true;
   });
 
@@ -1347,13 +1432,13 @@ function renderTable(){
   if(countEl) countEl.textContent = list.length + ' trade ditampilkan';
   if(clearBtn) clearBtn.style.display = appData.trades.length > 0 ? 'inline-flex' : 'none';
 
+  function th(col, label, cls){
+    var sorted = sortCol===col;
+    var icon = sorted ? (sortAsc?'fa-sort-up':'fa-sort-down') : 'fa-sort';
+    return '<th class="'+(cls||'')+(sorted?' sorted':'')+'" onclick="sortBy(\''+col+'\')">'+label+'<i class="fa-solid '+icon+' sort-icon"></i></th>';
+  }
   thead.innerHTML = '<tr>'+
-    '<th onclick="sortBy(\'date\')">Tanggal<i class="fa-solid fa-sort sort-icon"></i></th>'+
-    '<th onclick="sortBy(\'type\')">Tipe<i class="fa-solid fa-sort sort-icon"></i></th>'+
-    '<th onclick="sortBy(\'symbol\')">Pair<i class="fa-solid fa-sort sort-icon"></i></th>'+
-    '<th onclick="sortBy(\'session\')">Sesi<i class="fa-solid fa-sort sort-icon"></i></th>'+
-    '<th onclick="sortBy(\'method\')">Metode<i class="fa-solid fa-sort sort-icon"></i></th>'+
-    '<th onclick="sortBy(\'profit\')" class="ta-r">P/L ($)<i class="fa-solid fa-sort sort-icon"></i></th>'+
+    th('date','Tanggal')+th('type','Tipe')+th('symbol','Pair')+th('session','Sesi')+th('method','Metode')+th('profit','P/L ($)','ta-r')+
     '<th>Catatan & Chart</th>'+
     '<th class="ta-r">Aksi</th>'+
   '</tr>';
@@ -1375,7 +1460,7 @@ function renderTable(){
 
     var thumbHtml = '<span class="thumb-empty">—</span>';
     if(t.images && t.images.length){
-      thumbHtml = '<div class="td-thumb" onclick="openLightbox('+escapeHtml(JSON.stringify(t.images))+', 0)">'+
+      thumbHtml = '<div class="td-thumb" onclick="openTradeImages(\''+escapeHtml(t.id)+'\')">'+
         '<img src="'+t.images[0]+'" class="thumb-img" alt="chart">'+
         (t.images.length>1?'<span class="thumb-badge">'+t.images.length+'</span>':'')+
       '</div>';
@@ -1383,7 +1468,7 @@ function renderTable(){
 
     html += '<tr>'+
       '<td class="mono">'+fmtDate(t.date)+'</td>'+
-      '<td><span class="tag '+tagCls+'">'+t.type.toUpperCase()+'</span></td>'+
+      '<td><span class="tag '+tagCls+'">'+escapeHtml((t.type||'').toUpperCase())+'</span></td>'+
       '<td class="mono"><strong>'+escapeHtml(t.symbol||'—')+'</strong></td>'+
       '<td>'+escapeHtml(t.session||'—')+'</td>'+
       '<td>'+escapeHtml(t.method||'—')+'</td>'+
@@ -1395,8 +1480,8 @@ function renderTable(){
         '</div>'+
       '</td>'+
       '<td class="ta-r">'+
-        '<button class="btn-icon btn-xs" onclick="editTrade(\''+t.id+'\')" title="Edit"><i class="fa-solid fa-pen"></i></button>'+
-        '<button class="btn-icon btn-xs danger" onclick="deleteTrade(\''+t.id+'\')" title="Hapus"><i class="fa-solid fa-trash"></i></button>'+
+        '<button class="btn-icon btn-xs" onclick="editTrade(\''+escapeHtml(t.id)+'\')" title="Edit"><i class="fa-solid fa-pen"></i></button>'+
+        '<button class="btn-icon btn-xs danger" onclick="deleteTrade(\''+escapeHtml(t.id)+'\')" title="Hapus"><i class="fa-solid fa-trash"></i></button>'+
       '</td>'+
     '</tr>';
   }
@@ -1420,6 +1505,12 @@ function clearFilters(){
   renderTable();
 }
 
+function openTradeImages(id){
+  var t = null;
+  for(var i=0;i<appData.trades.length;i++) if(appData.trades[i].id===id){ t = appData.trades[i]; break; }
+  if(t && t.images && t.images.length) openLightbox(t.images, 0);
+}
+
 // ==========================================
 // MODALS & FORM TRADING
 // ==========================================
@@ -1427,6 +1518,7 @@ function openModal(id){
   editingId = id || null;
   currentImages = [];
   var titleEl = document.getElementById('modalTitle');
+  populateSelects();
   if(editingId){
     titleEl.textContent = 'Edit Trade';
     var t = null;
@@ -1479,7 +1571,7 @@ function toggleFieldsByType(){
     symGroup.style.display = 'flex';
     sessGroup.style.display = 'flex';
     methGroup.style.display = 'flex';
-    imgGroup.style.display = 'block';
+    imgGroup.style.display = 'flex';
     profitLbl.textContent = 'Profit/Loss ($)';
   }
 }
@@ -1555,7 +1647,7 @@ function renderImagePreviews(){
   var html = '';
   for(var i=0;i<currentImages.length;i++){
     html += '<div class="img-preview-item">'+
-      '<img src="'+currentImages[i]+'" onclick="openLightbox('+escapeHtml(JSON.stringify(currentImages))+','+i+')">'+
+      '<img src="'+currentImages[i]+'" onclick="openLightbox(currentImages,'+i+')">'+
       '<button class="img-remove" onclick="removeTradeImage('+i+')"><i class="fa-solid fa-xmark"></i></button></div>';
   }
   grid.innerHTML = html;
@@ -1566,22 +1658,24 @@ function removeTradeImage(idx){
   renderImagePreviews();
 }
 
-// Setup upload area listeners
 document.addEventListener('DOMContentLoaded', function(){
   var area = document.getElementById('uploadArea');
   var fileInp = document.getElementById('fileInput');
+  async function handleTradeFiles(files){
+    files = Array.prototype.slice.call(files||[]).filter(function(f){ return f.type && f.type.indexOf('image/')===0; });
+    for(var i=0;i<files.length;i++){
+      if(currentImages.length>=3){ showToast('Maksimal 3 gambar per trade','error'); break; }
+      try{ currentImages.push(await compressImage(files[i], 1280, 0.72)); }
+      catch(err){ showToast('Gagal memproses gambar','error'); }
+    }
+    renderImagePreviews();
+  }
   if(area && fileInp){
     area.onclick = function(){ fileInp.click(); };
-    fileInp.onchange = async function(e){
-      var files = Array.prototype.slice.call(e.target.files||[]).filter(function(f){ return f.type && f.type.indexOf('image/')===0; });
-      fileInp.value = '';
-      for(var i=0;i<files.length;i++){
-        if(currentImages.length>=3){ showToast('Maksimal 3 gambar per trade','error'); break; }
-        try{ currentImages.push(await compressImage(files[i], 1280, 0.72)); }
-        catch(err){ showToast('Gagal memproses gambar','error'); }
-      }
-      renderImagePreviews();
-    };
+    area.addEventListener('dragover', function(e){ e.preventDefault(); area.classList.add('dragover'); });
+    area.addEventListener('dragleave', function(){ area.classList.remove('dragover'); });
+    area.addEventListener('drop', function(e){ e.preventDefault(); area.classList.remove('dragover'); handleTradeFiles(e.dataTransfer.files); });
+    fileInp.onchange = function(e){ var f = e.target.files; handleTradeFiles(f).then(function(){ fileInp.value=''; }); };
   }
 });
 
@@ -1656,7 +1750,7 @@ function renderDataSymbols(){
   var html = '';
   var syms = appData.symbols || [];
   for(var i=0;i<syms.length;i++){
-    html += '<span class="symbol-chip">'+escapeHtml(syms[i])+'<button onclick="deleteSymbol(\''+syms[i]+'\')"><i class="fa-solid fa-xmark"></i></button></span>';
+    html += '<span class="symbol-chip">'+escapeHtml(syms[i])+'<button onclick="deleteSymbolAt('+i+')"><i class="fa-solid fa-xmark"></i></button></span>';
   }
   c.innerHTML = html;
 }
@@ -1674,9 +1768,9 @@ async function addSymbol(){
     showToast('Simbol sudah ada','error');
   }
 }
-async function deleteSymbol(s){
+async function deleteSymbolAt(i){
   if(appData.symbols.length<=1){ showToast('Minimal harus ada 1 simbol','error'); return; }
-  appData.symbols = appData.symbols.filter(function(x){return x!==s;});
+  appData.symbols.splice(i,1);
   await saveData();
   renderDataSymbols();
   showToast('Simbol dihapus','info');
@@ -1687,7 +1781,7 @@ function renderDataMethods(){
   var html = '';
   var mets = appData.methods || [];
   for(var i=0;i<mets.length;i++){
-    html += '<span class="symbol-chip">'+escapeHtml(mets[i])+'<button onclick="deleteMethod(\''+mets[i]+'\')"><i class="fa-solid fa-xmark"></i></button></span>';
+    html += '<span class="symbol-chip">'+escapeHtml(mets[i])+'<button onclick="deleteMethodAt('+i+')"><i class="fa-solid fa-xmark"></i></button></span>';
   }
   c.innerHTML = html;
 }
@@ -1705,9 +1799,9 @@ async function addMethod(){
     showToast('Metode sudah ada','error');
   }
 }
-async function deleteMethod(m){
+async function deleteMethodAt(i){
   if(appData.methods.length<=1){ showToast('Minimal harus ada 1 metode','error'); return; }
-  appData.methods = appData.methods.filter(function(x){return x!==m;});
+  appData.methods.splice(i,1);
   await saveData();
   renderDataMethods();
   showToast('Metode dihapus','info');
@@ -1723,7 +1817,9 @@ function openExportModal(){ document.getElementById('exportModal').classList.add
 function openImportModal(){ document.getElementById('importModal').classList.add('open'); }
 
 function exportData(){
-  var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(appData, null, 2));
+  var copy = Object.assign({}, appData);
+  delete copy.config;
+  var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(copy, null, 2));
   var dlAnchor = document.createElement('a');
   dlAnchor.setAttribute('href', dataStr);
   dlAnchor.setAttribute('download', 'trading_journal_backup_' + todayStr() + '.json');
@@ -1742,7 +1838,9 @@ function importData(e){
     try{
       var parsed = JSON.parse(evt.target.result);
       if(parsed && Array.isArray(parsed.trades)){
+        var cfg = appData.config;
         appData = parsed;
+        appData.config = cfg;
         normalizeData();
         await saveData();
         renderAll();
@@ -1756,6 +1854,7 @@ function importData(e){
     }
   };
   reader.readAsText(file);
+  e.target.value = '';
 }
 
 function exportExcel(){
@@ -1763,8 +1862,7 @@ function exportExcel(){
     showToast('Library Excel belum siap', 'error');
     return;
   }
-  var trades = appData.trades;
-  var rows = trades.map(function(t, i){
+  var rows = appData.trades.map(function(t, i){
     return {
       No: i + 1,
       Tanggal: t.date || '',
@@ -1794,8 +1892,9 @@ function closeConfirm(){
   confirmCb = null;
 }
 document.getElementById('confirmBtn').onclick = function(){
-  if(typeof confirmCb === 'function') confirmCb();
+  var cb = confirmCb;
   closeConfirm();
+  if(typeof cb === 'function') cb();
 };
 
 // ==========================================
@@ -1814,31 +1913,17 @@ function renderAll(){
 }
 
 // ==========================================
-// INITIALIZATION ON LOAD
+// INISIALISASI
 // ==========================================
 window.onload = async function(){
   await loadLocalData();
   renderAll();
-  
-  // Background sync check
-  setTimeout(function(){
-    backgroundDrivePull();
-  }, 1000);
-
-  // Periodic session check
   setInterval(updateGlobalSessions, 60000);
-};
 
-async function backgroundDrivePull(){
-  var lastSync = parseInt(localStorage.getItem('tj_last_sync') || '0', 10);
-  if (Date.now() - lastSync > 300000) {
-    await pullFromDrive(false);
-  } else if (lastSync > 0) {
-    updateSyncStatus('green', 'Tersinkronisasi ' + new Date(lastSync).toLocaleTimeString());
-  } else {
-    updateSyncStatus('green', 'Siap (lokal)');
-  }
-}
+  var c = getDriveCfg();
+  if (c.url && c.key) await pullFromDrive(false);
+  else updateSyncStatus('yellow', 'Drive: belum dikonfigurasi');
+};
 </script>
 </body>
 </html>
